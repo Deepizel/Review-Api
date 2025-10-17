@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = express();
 const productRoutes = require('../routes/productRoutes');
-
+const errorMiddleware = require('../middlewares/errorMiddleware');
 
 dotenv.config();
 const port = process.env.PORT;
@@ -30,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
     res.send('Hello World');
 });
+// error middleware
+app.use(errorMiddleware);
 
 // routes
 app.use('/api/products', productRoutes);

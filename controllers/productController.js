@@ -1,17 +1,19 @@
 const Product = require('../models/productModel');
+const asyncHandler = require('express-async-handler');
 
 
-const createProduct = async (req, res) => {
+const createProduct = asyncHandler(async (req, res) => {
     try {
       const { name, description, price, image } = req.body;
       const product = await Product.create({ name, description, price, image });
       res.status(201).json({ message: 'Product created successfully', product });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
     }
-  }
+  })
 
-const getAllProducts = async (req, res) => {
+const getAllProducts = asyncHandler(async (req, res) => {
     try {
       const products = await Product.find();
       if (!products) {
@@ -19,11 +21,13 @@ const getAllProducts = async (req, res) => {
       }
       res.status(200).json({ products });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
+      throw new Error(err.message);
     }
-  }
+  })
 
-  const updateProduct = async (req, res) => {
+  const updateProduct = asyncHandler(async (req, res) => {
     try {
       const { id } = req.params;
       const { name, description, price, image } = req.body;
@@ -33,10 +37,11 @@ const getAllProducts = async (req, res) => {
       }
       res.status(200).json({ message: 'Product updated successfully', product });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
     }
-  }
-  const deleteProduct = async (req, res) => {
+  });
+  const deleteProduct = asyncHandler(async (req, res) => {
     try {
       const { id } = req.params;
       const product = await Product.findByIdAndDelete(id);
@@ -45,11 +50,12 @@ const getAllProducts = async (req, res) => {
       }
       res.status(200).json({ message: 'Product deleted successfully', product });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
     }
-  }
+  });
 
-const getProductById =async (req, res) => {
+const getProductById =asyncHandler(async (req, res) => {
     try {
       const { id } = req.params;
       const product = await Product.findById(id);
@@ -58,10 +64,11 @@ const getProductById =async (req, res) => {
       }
       res.status(200).json({ product });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
     }
-  }
-  const getProductByName = async (req, res) => {
+  });
+  const getProductByName = asyncHandler(async (req, res) => {
     try {
       const { name } = req.params;
       const product = await Product.find({ name });
@@ -70,11 +77,12 @@ const getProductById =async (req, res) => {
       }
       res.status(200).json({ product });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
     }
-  }
+  });
 
-  const getProductByPrice = async (req, res) => {
+  const getProductByPrice = asyncHandler(async (req, res) => {
     try {
       const { productName, price } = req.params;
       const product = await Product.find({ name: productName, price: price });
@@ -83,9 +91,10 @@ const getProductById =async (req, res) => {
       }
       res.status(200).json({ product });
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      res.status(500);
+      throw new Error(err.message);
     }
-  }
+  });
 
 module.exports = {
     createProduct,
