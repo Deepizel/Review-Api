@@ -1,24 +1,38 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  address: {
+  firstName: {
     type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-  },
-  nonce: {
+    default: null,
+  }, 
+   lastName: {
     type: String,
-    required: true,
-    default: () => Math.floor(Math.random() * 1000000).toString(),
+    default: null,
   },
-  username: {
+  userName: {
     type: String,
     default: null,
   },
   email: {
     type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      },
+      message: 'Invalid email address',
+    },
+  },
+  password: {
+    type: String,
     default: null,
+  },
+  roleType: {
+    type: String,
+    default: 'user',
   },
   lastLogin: {
     type: Date,
@@ -30,4 +44,7 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+
+
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
+module.exports = User;

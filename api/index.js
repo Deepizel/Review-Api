@@ -1,19 +1,22 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const app = express();
+
 const cors = require('cors');
 const productRoutes = require('../routes/productRoutes');
+const userRoutes = require('../routes/authRoutes');
 const errorMiddleware = require('../middlewares/errorMiddleware');
+const authMiddleware = require("../middlewares/authMiddleware");
 
 dotenv.config();
+// environment variables
 const port = process.env.PORT;
 const allowedOrigins = process.env.FRONTEND;
-// mongoose.connect(process.env.MONGODB_URI, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
-// connect to db
+// start of express app
+const app = express();
+
+// connect to mongodb
 mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('Connected to MongoDB');
     app.listen(port, () => {
@@ -39,9 +42,10 @@ app.get('/', (req, res) => {
 });
 // error middleware
 app.use(errorMiddleware);
-
+app.use(authMiddleware);
 // routes
 app.use('/api/products', productRoutes);
+app.use('/api/users', authMiddleware, userRoutes);
 
 
 
